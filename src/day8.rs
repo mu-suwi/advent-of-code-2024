@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
 struct Vec2 {
     x: isize,
     y: isize,
@@ -26,16 +26,29 @@ impl Vec2 {
             y: -self.y,
         }
     }
+
+    fn multiply(&self, factor: isize) -> Self {
+        let x = self.x * factor;
+        let y = self.y * factor;
+        Vec2 { x, y }
+    }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 struct Antenna {
     location: Vec2,
     frequency: char,
 }
 
 pub fn main(input: &str) {
+    // this shits ALL in main baby
+    // welcome to iterator hell
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+
+    let range = Vec2 {
+        x: grid[0].len() as isize,
+        y: grid.len() as isize,
+    };
 
     let frequencies: HashSet<char> = grid
         .iter()
@@ -76,15 +89,18 @@ pub fn main(input: &str) {
                     antennas
                         .iter()
                         .filter(move |other| this.frequency == other.frequency && other != &this)
-                        .map(|other| {
+                        .flat_map(move |other| {
+                            // get our bounds... with one extremely evil iterator!!!
                             let offset: Vec2 = this.location.get_offset(&other.location).invert();
-                            let node: Vec2 = this.location.offset_by(&offset);
-                            node
-                        })
-                        .filter(|node| {
-                            let range_x = 0..grid[0].len() as isize;
-                            let range_y = 0..grid.len() as isize;
-                            range_x.contains(&node.x) && range_y.contains(&node.y)
+                            [1, -1].iter().flat_map(move |sign| {
+                                (1..64)
+                                    .map(move |i| {
+                                        this.location.offset_by(&offset.multiply(i * sign))
+                                    })
+                                    .take_while(move |i| {
+                                        (0..range.x).contains(&i.x) && (0..range.y).contains(&i.y)
+                                    })
+                            })
                         })
                 })
         })
@@ -114,10 +130,10 @@ pub fn main(input: &str) {
 
     // print the whole map... as a cute blinky radar screen
     loop {
-        for i in [&grid, &grid_nodes] {
+        [&grid, &grid_nodes].iter().for_each(|gridmap| {
             println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             print!(" ");
-            i.iter().for_each(|line| {
+            gridmap.iter().for_each(|line| {
                 line.iter().for_each(|c| {
                     print!(" {c}");
                 });
@@ -127,6 +143,6 @@ pub fn main(input: &str) {
             println!("\nnumber of antinodes: {}", nodes.len());
 
             std::thread::sleep(std::time::Duration::from_secs(1));
-        }
+        })
     }
 }
