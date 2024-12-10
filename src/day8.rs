@@ -112,10 +112,11 @@ pub fn main(input: &str) {
                         .iter()
                         .filter(move |other| this.frequency == other.frequency && other != &this)
                         .flat_map(move |other| {
+                            // part 1: antinodes appear opposite from each {other} antenna
                             let offset: Vec2 = this.location.get_offset(&other.location).invert();
                             // part 2: antinodes appear at regular intervals along the same line
                             [1, -1].iter().flat_map(move |sign| {
-                                (1..64)
+                                (1..)
                                     .map(move |i| {
                                         this.location.offset_by(&offset.multiply(i * sign))
                                     })
@@ -128,7 +129,7 @@ pub fn main(input: &str) {
         })
         .collect();
 
-    // map of the grid with nodes added
+    // map of the grid with antinodes added
     let grid_nodes: Vec<Vec<char>> = grid
         .iter()
         .enumerate()
