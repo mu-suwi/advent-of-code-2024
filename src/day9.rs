@@ -22,8 +22,9 @@ pub fn main(input: &str) {
             .collect()
     };
 
+    // empty spaces will be a sequence of Nones
+    // files will be a sequence of Some(file ID)
     println!("reading disk...");
-
     let blocks: Vec<Option<usize>> = diskmap
         .iter()
         .enumerate()
@@ -40,9 +41,10 @@ pub fn main(input: &str) {
         })
         .collect();
 
-    println!("fragmenting disk, please wait...");
-
+    // part 1: just pack those blocks as tight as possible with no
+    // regard to fragmentation. this seems unsanitary somehow
     let fragged: Vec<Option<usize>> = {
+        println!("fragmenting disk, please wait...");
         let mut disk = blocks.clone();
 
         for (i, block) in disk.clone().iter().enumerate() {
@@ -64,8 +66,18 @@ pub fn main(input: &str) {
         disk
     };
 
-    println!("generating checksum...");
+    // print the whole thing, for fun:
+    fragged.iter().step_by(10).for_each(|b| match b {
+        Some(id) => {
+            let digit = id % 10;
+            print!("{digit}");
+        }
+        None => {
+            print!(".");
+        }
+    });
 
+    println!("generating checksum...");
     let checksum: usize = fragged
         .iter()
         .enumerate()
@@ -74,15 +86,4 @@ pub fn main(input: &str) {
         .sum();
 
     println!("filesystem checksum: {checksum}");
-
-    // // print the whole thing, for fun:
-
-    // fragged.iter().for_each(|b| match b {
-    //     Some(digit) => {
-    //         print!("{digit}");
-    //     }
-    //     None => {
-    //         print!(".");
-    //     }
-    // });
 }
