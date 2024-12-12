@@ -10,6 +10,7 @@
 // of antinodes at regular intervals, all the way out to
 // the edge of the map.
 
+// use crate::tools2d::Vec2;
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]

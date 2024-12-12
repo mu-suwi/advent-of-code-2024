@@ -1,15 +1,15 @@
 use std::{env, process::exit};
 
-mod day1;
-mod day2;
-mod day3;
-mod day4;
-mod day5;
-mod day6;
-mod day7;
-mod day8;
-mod day9;
-// mod day10;
+mod day01_lists;
+mod day02_reactor;
+mod day03_muls;
+mod day04_xmas;
+mod day05_rules;
+mod day06_chuchu;
+mod day07_operators;
+mod day08_antennas;
+mod day09_defrag;
+mod day10_hiking;
 // mod day11;
 // mod day12;
 // mod day13;
@@ -26,6 +26,8 @@ mod day9;
 // mod day24;
 // mod day25;
 
+// mod tools2d;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() != 3 {
@@ -37,16 +39,16 @@ fn main() {
     let trimmed = input.trim();
 
     match day {
-        1 => day1::main(trimmed),
-        2 => day2::main(trimmed),
-        3 => day3::main(trimmed),
-        4 => day4::main(trimmed),
-        5 => day5::main(trimmed),
-        6 => day6::main(trimmed),
-        7 => day7::main(trimmed),
-        8 => day8::main(trimmed),
-        9 => day9::main(trimmed),
-        // 10 => day10::main(trimmed),
+        1 => day01_lists::main(trimmed),
+        2 => day02_reactor::main(trimmed),
+        3 => day03_muls::main(trimmed),
+        4 => day04_xmas::main(trimmed),
+        5 => day05_rules::main(trimmed),
+        6 => day06_chuchu::main(trimmed),
+        7 => day07_operators::main(trimmed),
+        8 => day08_antennas::main(trimmed),
+        9 => day09_defrag::main(trimmed),
+        10 => day10_hiking::main(trimmed),
         // 11 => day11::main(trimmed),
         // 12 => day12::main(trimmed),
         // 13 => day13::main(trimmed),
