@@ -26,7 +26,7 @@ mod day10_hiking;
 // mod day24;
 // mod day25;
 
-// mod tools2d;
+mod tools2d;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

@@ -1,6 +1,16 @@
+#![allow(dead_code)]
+
 // i don't know how many more of these problems are going to involve 2D grids
+// so maybe a little helper module will help me avoid reimplementing Vec2 every time...
 
 use std::ops;
+
+pub const COMPASS: [Vec2; 4] = [
+    Vec2 { x: 0, y: -1 },
+    Vec2 { x: 1, y: 0 },
+    Vec2 { x: 0, y: 1 },
+    Vec2 { x: -1, y: 0 },
+];
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vec2 {
