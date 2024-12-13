@@ -80,3 +80,18 @@ impl Vec2 {
         self.x.unsigned_abs() + self.y.unsigned_abs()
     }
 }
+
+// impl<T> Vec2
+// where
+//     for<'a> &'a T: Sized,
+// {
+//     pub fn bounds(other: &[Vec<T>]) -> Self
+//     where
+//         T: Sized,
+//     {
+//         Vec2 {
+//             x: other[0].len() as isize,
+//             y: other.len() as isize,
+//         }
+//     }
+// }
