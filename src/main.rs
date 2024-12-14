@@ -11,7 +11,7 @@ mod day08_antennas;
 mod day09_defrag;
 mod day10_hiking;
 mod day11_stones;
-// mod day12;
+mod day12_flowers;
 // mod day13;
 // mod day14;
 // mod day15;
@@ -50,7 +50,7 @@ fn main() {
         9 => day09_defrag::main(trimmed),
         10 => day10_hiking::main(trimmed),
         11 => day11_stones::main(trimmed),
-        // 12 => day12::main(trimmed),
+        12 => day12_flowers::main(trimmed),
         // 13 => day13::main(trimmed),
         // 14 => day14::main(trimmed),
         // 15 => day15::main(trimmed),
