@@ -29,6 +29,12 @@ impl ops::Add<Vec2> for Vec2 {
     }
 }
 
+impl ops::AddAssign<Vec2> for Vec2 {
+    fn add_assign(&mut self, other: Vec2) {
+        *self = *self + other;
+    }
+}
+
 impl ops::Sub<Vec2> for Vec2 {
     type Output = Vec2;
 

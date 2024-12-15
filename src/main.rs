@@ -12,8 +12,8 @@ mod day09_defrag;
 mod day10_hiking;
 mod day11_stones;
 mod day12_flowers;
-// mod day13;
-// mod day14;
+mod day13_theclaw;
+mod day14_omorashi;
 // mod day15;
 // mod day16;
 // mod day17;
@@ -51,8 +51,8 @@ fn main() {
         10 => day10_hiking::main(trimmed),
         11 => day11_stones::main(trimmed),
         12 => day12_flowers::main(trimmed),
-        // 13 => day13::main(trimmed),
-        // 14 => day14::main(trimmed),
+        13 => day13_theclaw::main(trimmed),
+        14 => day14_omorashi::main(trimmed),
         // 15 => day15::main(trimmed),
         // 16 => day16::main(trimmed),
         // 17 => day17::main(trimmed),
@@ -64,9 +64,6 @@ fn main() {
         // 23 => day23::main(trimmed),
         // 24 => day24::main(trimmed),
         // 25 => day25::main(trimmed),
-        _ => {
-            println!("day solution not yet implemented");
-            exit(1);
-        }
+        _ => unimplemented!(),
     }
 }
