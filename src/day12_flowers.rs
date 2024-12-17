@@ -7,7 +7,7 @@
 // for part 2, find all continuous walls in the perimeter
 // and multiply the area by the number of walls instead.
 
-use crate::tools2d::{Vec2, COMPASS};
+use crate::tools2d::Vec2;
 use std::collections::{HashSet, VecDeque};
 
 struct Region {
@@ -30,7 +30,7 @@ fn floodfill(world: &[Vec<char>], mouse: Vec2) -> HashSet<Vec2> {
     while let Some(here) = queue.pop_front() {
         if !painted.contains(&here) {
             painted.insert(here);
-            for dir in COMPASS {
+            for dir in Vec2::COMPASS {
                 let there = here + dir;
                 let Some(that_tile) = get_tile_in(world, there) else {
                     continue;
@@ -72,7 +72,7 @@ fn find_areas(world: &[Vec<char>]) -> Vec<HashSet<Vec2>> {
 fn find_perimeter(area: &HashSet<Vec2>) -> HashSet<(Vec2, Vec2)> {
     let mut borders: HashSet<(Vec2, Vec2)> = HashSet::new();
     for tile in area {
-        for dir in COMPASS {
+        for dir in Vec2::COMPASS {
             let other_tile = *tile + dir;
             if !area.contains(&other_tile) {
                 borders.insert((*tile, other_tile));
@@ -85,15 +85,13 @@ fn find_perimeter(area: &HashSet<Vec2>) -> HashSet<(Vec2, Vec2)> {
 // returns false if you are in a line of borders and are not the top-most/left-most border
 fn is_wall_leader(perimeter: &HashSet<(Vec2, Vec2)>, wall: (Vec2, Vec2)) -> bool {
     let (a, b) = wall;
-    let north = Vec2 { x: 0, y: -1 };
-    let west = Vec2 { x: -1, y: 0 };
     if a.x == b.x {
         // horizontal wall
-        let one_west = (a + west, b + west);
+        let one_west = (a + Vec2::LEFT, b + Vec2::LEFT);
         !perimeter.contains(&one_west)
     } else if a.y == b.y {
         // vertical wall
-        let one_north = (a + north, b + north);
+        let one_north = (a + Vec2::UP, b + Vec2::UP);
         !perimeter.contains(&one_north)
     } else {
         panic!("wall contained {0:?}, {1:?}", a, b);

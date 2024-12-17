@@ -6,7 +6,7 @@
 // from one digit to an orthogonally adjacent digit exactly 1 block higher.
 // then sum the scores of all start points.
 
-use crate::tools2d::{Vec2, COMPASS};
+use crate::tools2d::Vec2;
 use std::collections::HashSet;
 
 struct Fortress {
@@ -48,7 +48,7 @@ fn recursive_search(
     // let's get our bearings...
     let here = world.get_tile(jump_from).unwrap();
     print!("{here}->");
-    for dir in COMPASS {
+    for dir in Vec2::COMPASS {
         // glad i wrote that tools2d module, it makes adding Vec2s like this sooo intuitive
         let jump_to = jump_from + dir;
         let Some(tile) = world.get_tile(jump_to) else {

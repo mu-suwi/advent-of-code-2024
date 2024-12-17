@@ -5,13 +5,6 @@
 
 use std::ops;
 
-pub const COMPASS: [Vec2; 4] = [
-    Vec2 { x: 0, y: -1 },
-    Vec2 { x: 1, y: 0 },
-    Vec2 { x: 0, y: 1 },
-    Vec2 { x: -1, y: 0 },
-];
-
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vec2 {
     pub x: isize,
@@ -85,6 +78,13 @@ impl Vec2 {
     pub fn taxi_dist(self) -> usize {
         self.x.unsigned_abs() + self.y.unsigned_abs()
     }
+
+    pub const UP: Vec2 = Vec2 { x: 0, y: -1 };
+    pub const RIGHT: Vec2 = Vec2 { x: 1, y: 0 };
+    pub const DOWN: Vec2 = Vec2 { x: 0, y: 1 };
+    pub const LEFT: Vec2 = Vec2 { x: -1, y: 0 };
+
+    pub const COMPASS: [Vec2; 4] = [Vec2::UP, Vec2::RIGHT, Vec2::DOWN, Vec2::LEFT];
 }
 
 // impl<T> Vec2
