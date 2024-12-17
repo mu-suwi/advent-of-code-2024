@@ -86,18 +86,3 @@ impl Vec2 {
 
     pub const COMPASS: [Vec2; 4] = [Vec2::UP, Vec2::RIGHT, Vec2::DOWN, Vec2::LEFT];
 }
-
-// impl<T> Vec2
-// where
-//     for<'a> &'a T: Sized,
-// {
-//     pub fn bounds(other: &[Vec<T>]) -> Self
-//     where
-//         T: Sized,
-//     {
-//         Vec2 {
-//             x: other[0].len() as isize,
-//             y: other.len() as isize,
-//         }
-//     }
-// }

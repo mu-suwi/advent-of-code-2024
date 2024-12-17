@@ -14,7 +14,7 @@ mod day11_stones;
 mod day12_flowers;
 mod day13_theclaw;
 mod day14_omorashi;
-// mod day15;
+mod day15_sokobot;
 // mod day16;
 // mod day17;
 // mod day18;
@@ -53,7 +53,7 @@ fn main() {
         12 => day12_flowers::main(trimmed),
         13 => day13_theclaw::main(trimmed),
         14 => day14_omorashi::main(trimmed),
-        // 15 => day15::main(trimmed),
+        15 => day15_sokobot::main(trimmed),
         // 16 => day16::main(trimmed),
         // 17 => day17::main(trimmed),
         // 18 => day18::main(trimmed),
