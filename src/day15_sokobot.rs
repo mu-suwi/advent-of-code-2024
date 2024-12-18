@@ -125,8 +125,9 @@ pub fn main(input: &str) {
 
         // // uncomment this to view step-by-step:
 
-        // use std::io::{stdin, Read};
+        // render_big_warehouse(&warehouse, PART);
         // println!("roomba coords: {roomba:?}");
+        // use std::io::{stdin, Read};
         // stdin().read_exact(&mut [0]).unwrap();
     }
 
