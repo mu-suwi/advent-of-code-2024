@@ -85,4 +85,18 @@ impl Vec2 {
     pub const LEFT: Vec2 = Vec2 { x: -1, y: 0 };
 
     pub const COMPASS: [Vec2; 4] = [Vec2::UP, Vec2::RIGHT, Vec2::DOWN, Vec2::LEFT];
+
+    pub fn rotate_cw(self) -> Vec2 {
+        Vec2 {
+            x: -self.y,
+            y: self.x,
+        }
+    }
+
+    pub fn rotate_ccw(self) -> Vec2 {
+        Vec2 {
+            x: self.y,
+            y: -self.x,
+        }
+    }
 }
