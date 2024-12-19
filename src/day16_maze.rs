@@ -42,7 +42,7 @@ pub fn main(input: &str) {
         .unwrap();
 
     let mut rats: Vec<Rat> = Vec::new();
-    let mut visited: HashSet<Vec2> = HashSet::new();
+    let mut visited: HashSet<(Vec2, Vec2)> = HashSet::new();
     let mut score_submissions: HashSet<usize> = HashSet::new();
 
     let starter_rat = Rat {
@@ -66,7 +66,7 @@ pub fn main(input: &str) {
                     rats.swap_remove(i);
                     continue;
                 }
-                _ if visited.contains(&rat.pos) => {
+                _ if visited.contains(&(rat.pos, rat.dir)) => {
                     rats.swap_remove(i);
                     continue;
                 }
@@ -91,7 +91,7 @@ pub fn main(input: &str) {
                     sleep_countdown: 1001,
                 };
                 rats.push(new_rat);
-                visited.insert(rat.pos);
+                visited.insert((rat.pos, rat.dir));
             }
 
             if get_tile(&maze, rat.pos + rat.dir.rotate_cw()) == '.' {
@@ -102,7 +102,7 @@ pub fn main(input: &str) {
                     sleep_countdown: 1001,
                 };
                 rats.push(new_rat);
-                visited.insert(rat.pos);
+                visited.insert((rat.pos, rat.dir));
             }
 
             rats[i].pos = rat.pos + rat.dir;
