@@ -3,7 +3,7 @@
 // this puzzle is simple - the input is a maze. you start at S and face east.
 // going straight incurs 1 point and turning incurs 1000. find the lowest possible score!
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use crate::tools2d::Vec2;
 
@@ -22,6 +22,18 @@ fn get_tile(world: &[Vec<char>], coords: Vec2) -> char {
     let x = coords.x as usize;
     let y = coords.y as usize;
     world[y][x]
+}
+
+fn update_node(nodes: &mut HashMap<(Vec2, Vec2), usize>, key: (Vec2, Vec2), score: usize) -> bool {
+    if let Some(existing) = nodes.get(&key) {
+        if *existing <= score {
+            println!("failed to update node: {:?}", existing);
+            return false;
+        }
+    }
+    nodes.insert(key, score);
+    println!("updating node: {:?}", (key, score));
+    true
 }
 
 pub fn main(input: &str) {
@@ -44,7 +56,7 @@ pub fn main(input: &str) {
 
     // all the mutable state in one place, thx
     let mut rats: Vec<Rat> = Vec::new();
-    let mut visited: HashSet<(Vec2, Vec2)> = HashSet::new();
+    let mut visited: HashMap<(Vec2, Vec2), usize> = HashMap::new(); // store a score @ each node
     let mut score_submissions: HashSet<usize> = HashSet::new();
 
     let starter_rat = Rat {
@@ -56,33 +68,10 @@ pub fn main(input: &str) {
 
     rats.push(starter_rat);
 
+    println!("mapping maze...");
+
     while !&rats.is_empty() {
         for (i, rat) in rats.clone().into_iter().enumerate().rev() {
-            match get_tile(&maze, rat.pos) {
-                'E' => {
-                    // we reached the goal!
-                    score_submissions.insert(rat.score);
-                    rats.swap_remove(i);
-                    continue;
-                }
-                '#' => {
-                    // reached the end of a hallway
-                    rats.swap_remove(i);
-                    continue;
-                }
-                _ if visited.contains(&(rat.pos, rat.dir)) => {
-                    // another rat got here first
-                    rats.swap_remove(i);
-                    continue;
-                }
-                _ if rat.score > 100_000 => {
-                    // you must want to go home...
-                    rats.swap_remove(i);
-                    continue;
-                }
-                _ => {}
-            }
-
             // after turning a corner, you'll sleep for 1000 ticks
             // so that rats with lower scores stay in the lead.
             if rat.sleep_countdown > 0 {
@@ -92,36 +81,57 @@ pub fn main(input: &str) {
             }
 
             // every time the path branches left or right, spawn a new rat facing that direction
+            let [left, right] = [rat.dir.rotate_ccw(), rat.dir.rotate_cw()];
 
-            if get_tile(&maze, rat.pos + rat.dir.rotate_ccw()) == '.' {
-                let new_rat = Rat {
-                    pos: rat.pos + rat.dir.rotate_ccw(),
-                    dir: rat.dir.rotate_ccw(),
-                    score: rat.score,
-                    sleep_countdown: 1001, // 1 more to acct for newborn rat being 1 step ahead
-                };
-                rats.push(new_rat);
-                visited.insert((rat.pos, rat.dir));
+            for branch in [left, right] {
+                if get_tile(&maze, rat.pos + branch) == '.' {
+                    let updated = update_node(&mut visited, (rat.pos, branch), rat.score);
+                    if updated {
+                        let new_rat = Rat {
+                            pos: rat.pos + branch,
+                            dir: branch,
+                            score: rat.score,
+                            sleep_countdown: 1001,
+                        };
+                        rats.push(new_rat);
+                    }
+                }
             }
 
-            if get_tile(&maze, rat.pos + rat.dir.rotate_cw()) == '.' {
-                let new_rat = Rat {
-                    pos: rat.pos + rat.dir.rotate_cw(),
-                    dir: rat.dir.rotate_cw(),
-                    score: rat.score,
-                    sleep_countdown: 1001, // 1 more to acct for newborn rat being 1 step ahead
-                };
-                rats.push(new_rat);
-                visited.insert((rat.pos, rat.dir));
-            }
-
-            // after all that, step forward as normal
             rats[i].pos = rat.pos + rat.dir;
             rats[i].score += 1;
+
+            match get_tile(&maze, rat.pos) {
+                'E' => {
+                    // we reached the goal!
+                    score_submissions.insert(rat.score);
+                    rats.swap_remove(i);
+                }
+                '#' => {
+                    // reached the end of a hallway
+                    rats.swap_remove(i);
+                }
+                // _ if visited.contains_key(&(rat.pos, rat.dir)) => {
+                //     // another rat got here first
+                //     rats.swap_remove(i);
+                // }
+                _ if rat.score > 100_000 => {
+                    // you must want to go home...
+                    rats.swap_remove(i);
+                }
+                _ => {}
+            }
         }
     }
 
-    for score in score_submissions {
-        println!("{score}");
-    }
+    println!("finished mapping maze");
+
+    let score = score_submissions
+        .iter()
+        .min()
+        .expect("no score submissions");
+
+    println!("best score: {score}");
+
+    // time for part 2... hoo wee
 }
