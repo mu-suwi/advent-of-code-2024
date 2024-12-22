@@ -4,7 +4,8 @@
 // and has a unique limited set of instructions. you are given a starting configuration
 // with some value in register A and some source code to be executed.
 
-// for part 2, find an input to put in register A which results in
+// for part 2, find an input to put in register A which results in the program
+// outputting its own source code.
 
 use regex::Regex;
 
