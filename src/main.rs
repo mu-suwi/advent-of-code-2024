@@ -16,7 +16,7 @@ mod day13_theclaw;
 mod day14_omorashi;
 mod day15_sokobot;
 mod day16_maze;
-// mod day17;
+mod day17_computer;
 // mod day18;
 // mod day19;
 // mod day20;
@@ -55,7 +55,7 @@ fn main() {
         14 => day14_omorashi::main(trimmed),
         15 => day15_sokobot::main(trimmed),
         16 => day16_maze::main(trimmed),
-        // 17 => day17::main(trimmed),
+        17 => day17_computer::main(trimmed),
         // 18 => day18::main(trimmed),
         // 19 => day19::main(trimmed),
         // 20 => day20::main(trimmed),
