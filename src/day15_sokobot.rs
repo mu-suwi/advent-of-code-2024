@@ -7,7 +7,7 @@
 
 const PART: isize = 2; // maybe we can avoid mangling the code too much for part 2
 
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 use std::collections::{HashSet, VecDeque};
 
 // storing the world not as a 2D array, but as a list of entities with coordinates

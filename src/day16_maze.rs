@@ -5,7 +5,7 @@
 
 use std::collections::{HashMap, HashSet};
 
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 
 // breadth-first search seems like a good way to go about this...
 // let's try making a maze-running rat that duplicates itself at every branch.

@@ -17,7 +17,7 @@ mod day14_omorashi;
 mod day15_sokobot;
 mod day16_maze;
 mod day17_computer;
-// mod day18;
+mod day18_meteors;
 // mod day19;
 // mod day20;
 // mod day21;
@@ -26,7 +26,7 @@ mod day17_computer;
 // mod day24;
 // mod day25;
 
-mod tools2d;
+mod vec2;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -56,7 +56,7 @@ fn main() {
         15 => day15_sokobot::main(trimmed),
         16 => day16_maze::main(trimmed),
         17 => day17_computer::main(trimmed),
-        // 18 => day18::main(trimmed),
+        18 => day18_meteors::main(trimmed),
         // 19 => day19::main(trimmed),
         // 20 => day20::main(trimmed),
         // 21 => day21::main(trimmed),

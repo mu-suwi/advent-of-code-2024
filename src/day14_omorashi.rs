@@ -5,7 +5,7 @@
 
 // for part 2, continue simulating the robots until you find their secret easter egg.
 
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 use regex::Regex;
 use std::io::{stdin, Read};
 

@@ -7,7 +7,7 @@
 // for part 2, find all continuous walls in the perimeter
 // and multiply the area by the number of walls instead.
 
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 use std::collections::{HashSet, VecDeque};
 
 struct Region {

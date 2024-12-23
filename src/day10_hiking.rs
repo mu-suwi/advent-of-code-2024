@@ -6,7 +6,7 @@
 // from one digit to an orthogonally adjacent digit exactly 1 block higher.
 // then sum the scores of all start points.
 
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 use std::collections::HashSet;
 
 struct Fortress {

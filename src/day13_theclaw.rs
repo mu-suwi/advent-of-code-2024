@@ -1,4 +1,4 @@
-use crate::tools2d::Vec2;
+use crate::vec2::Vec2;
 use regex::Regex;
 
 // the input for this puzzle is a series of arcade machines.
