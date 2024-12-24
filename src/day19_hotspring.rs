@@ -5,37 +5,28 @@
 
 use std::collections::HashMap;
 
-fn all_found_in_string<'a>(sentence: &str, words: &'a [&str]) -> Vec<&'a str> {
-    words
-        .iter()
-        .filter(|w| sentence.contains(**w))
-        .copied()
-        .collect()
-}
-
 fn valid_compositions<'a>(
     sentence: &'a str,
     words: &[&str],
     cache: &mut HashMap<&'a str, usize>,
 ) -> usize {
     if let Some(valids) = cache.get(sentence) {
-        *valids
-    } else {
-        if sentence.is_empty() {
-            return 1;
-        }
-
-        let mut acc = 0;
-        for word in words {
-            if let Some(sentence_out) = sentence.strip_prefix(word) {
-                let valids = valid_compositions(sentence_out, words, cache);
-                cache.insert(sentence_out, valids);
-                acc += valids;
-            }
-        }
-
-        acc
+        return *valids;
     }
+
+    if sentence.is_empty() {
+        return 1;
+    }
+
+    let mut acc = 0;
+    for word in words {
+        if let Some(sentence_out) = sentence.strip_prefix(word) {
+            let valids = valid_compositions(sentence_out, words, cache);
+            cache.insert(sentence_out, valids);
+            acc += valids;
+        }
+    }
+    acc
 }
 
 pub fn main(input: &str) {
@@ -43,7 +34,7 @@ pub fn main(input: &str) {
 
     let mut towels: Vec<&str> = towels.split(", ").collect(); // shadowing for type change
     towels.sort_by_key(|a| usize::MAX - a.len());
-    let towels = towels;
+    let towels = towels; // shadowing to immutabilize
 
     let arrangements: Vec<&str> = arrangements.lines().collect();
 
@@ -52,8 +43,7 @@ pub fn main(input: &str) {
     let mut cache: HashMap<&str, usize> = HashMap::new();
 
     for arrange in arrangements {
-        let words = all_found_in_string(arrange, &towels);
-        let comps = valid_compositions(arrange, &words, &mut cache);
+        let comps = valid_compositions(arrange, &towels, &mut cache);
         println!("{arrange}: {comps}");
         if comps > 0 {
             valid_count += 1;
