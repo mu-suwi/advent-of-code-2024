@@ -50,32 +50,6 @@ fn populate_nodes(obstacles: &[Vec2]) -> HashMap<(Vec2, Vec2), usize> {
     nodes
 }
 
-// oh yeah optional function arguments? rust has those
-fn render(obstacles: &[Vec2], path: Option<Vec<Vec2>>) {
-    std::process::Command::new("clear").status().unwrap();
-
-    let path = path.unwrap_or_default();
-
-    for y in BOUNDS {
-        println!();
-        for x in BOUNDS {
-            let here = Vec2 { x, y };
-            match here {
-                _ if obstacles.contains(&here) => {
-                    print!("░░");
-                }
-                _ if path.contains(&here) => {
-                    print!("🐁");
-                }
-                _ => {
-                    print!("  ");
-                }
-            }
-        }
-    }
-    println!();
-}
-
 fn find_exit(obstacles: &[Vec2]) -> Option<Vec<Vec2>> {
     let starter_rat = Rat {
         pos: Vec2::ZERO,
@@ -114,6 +88,31 @@ fn find_exit(obstacles: &[Vec2]) -> Option<Vec<Vec2>> {
         }
     }
     None
+}
+
+// oh yeah optional function arguments? rust has those
+fn render(obstacles: &[Vec2], path: Option<Vec<Vec2>>) {
+    let path = path.unwrap_or_default();
+
+    std::process::Command::new("clear").status().unwrap();
+    for y in BOUNDS {
+        println!();
+        for x in BOUNDS {
+            let here = Vec2 { x, y };
+            match here {
+                _ if obstacles.contains(&here) => {
+                    print!("░░");
+                }
+                _ if path.contains(&here) => {
+                    print!("🐁");
+                }
+                _ => {
+                    print!("  ");
+                }
+            }
+        }
+    }
+    println!();
 }
 
 pub fn main(input: &str) {
