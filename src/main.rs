@@ -18,7 +18,7 @@ mod day15_sokobot;
 mod day16_maze;
 mod day17_computer;
 mod day18_meteors;
-// mod day19;
+mod day19_hotspring;
 // mod day20;
 // mod day21;
 // mod day22;
@@ -36,34 +36,34 @@ fn main() {
     }
     let day: usize = str::parse(&args[1]).expect("couldn't parse day as number");
     let input = std::fs::read_to_string(&args[2]).expect("couldn't read input text");
-    let trimmed = input.trim();
+    let input: &str = input.trim();
 
     match day {
-        1 => day01_lists::main(trimmed),
-        2 => day02_reactor::main(trimmed),
-        3 => day03_muls::main(trimmed),
-        4 => day04_xmas::main(trimmed),
-        5 => day05_rules::main(trimmed),
-        6 => day06_chuchu::main(trimmed),
-        7 => day07_operators::main(trimmed),
-        8 => day08_antennas::main(trimmed),
-        9 => day09_defrag::main(trimmed),
-        10 => day10_hiking::main(trimmed),
-        11 => day11_stones::main(trimmed),
-        12 => day12_flowers::main(trimmed),
-        13 => day13_theclaw::main(trimmed),
-        14 => day14_omorashi::main(trimmed),
-        15 => day15_sokobot::main(trimmed),
-        16 => day16_maze::main(trimmed),
-        17 => day17_computer::main(trimmed),
-        18 => day18_meteors::main(trimmed),
-        // 19 => day19::main(trimmed),
-        // 20 => day20::main(trimmed),
-        // 21 => day21::main(trimmed),
-        // 22 => day22::main(trimmed),
-        // 23 => day23::main(trimmed),
-        // 24 => day24::main(trimmed),
-        // 25 => day25::main(trimmed),
+        1 => day01_lists::main(input),
+        2 => day02_reactor::main(input),
+        3 => day03_muls::main(input),
+        4 => day04_xmas::main(input),
+        5 => day05_rules::main(input),
+        6 => day06_chuchu::main(input),
+        7 => day07_operators::main(input),
+        8 => day08_antennas::main(input),
+        9 => day09_defrag::main(input),
+        10 => day10_hiking::main(input),
+        11 => day11_stones::main(input),
+        12 => day12_flowers::main(input),
+        13 => day13_theclaw::main(input),
+        14 => day14_omorashi::main(input),
+        15 => day15_sokobot::main(input),
+        16 => day16_maze::main(input),
+        17 => day17_computer::main(input),
+        18 => day18_meteors::main(input),
+        19 => day19_hotspring::main(input),
+        // 20 => day20::main(input),
+        // 21 => day21::main(input),
+        // 22 => day22::main(input),
+        // 23 => day23::main(input),
+        // 24 => day24::main(input),
+        // 25 => day25::main(input),
         _ => unimplemented!(),
     }
 }
