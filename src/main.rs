@@ -19,7 +19,7 @@ mod day16_maze;
 mod day17_computer;
 mod day18_meteors;
 mod day19_hotspring;
-// mod day20;
+mod day20_noclip;
 // mod day21;
 // mod day22;
 // mod day23;
@@ -58,7 +58,7 @@ fn main() {
         17 => day17_computer::main(input),
         18 => day18_meteors::main(input),
         19 => day19_hotspring::main(input),
-        // 20 => day20::main(input),
+        20 => day20_noclip::main(input),
         // 21 => day21::main(input),
         // 22 => day22::main(input),
         // 23 => day23::main(input),
