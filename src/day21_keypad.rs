@@ -101,7 +101,7 @@ fn arrow_motion(orig: char, dest: char) -> Vec<char> {
     diddy_kong.press(dest)
 }
 
-fn build_input_cache() -> HashMap<(char, char), Vec<char>> {
+fn build_motion_cache() -> HashMap<(char, char), Vec<char>> {
     let mut cache = HashMap::new();
 
     let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A'];
@@ -124,49 +124,14 @@ fn build_input_cache() -> HashMap<(char, char), Vec<char>> {
 }
 
 fn expand(
-    motion: char,
-    expansion_cache: &mut HashMap<char, Vec<char>>,
-) -> Vec<char> {
-    if let Some(value) = expansion_cache.get(&motion) {
-        return value.clone();
-    }
-
-    let mut moves = Vec::new();
-
-    for (a, b) in [('A', motion), (motion, 'A')] {
-        let mut mov = arrow_motion(a, b);
-        moves.append(&mut mov);
-    }
-
-    moves
-}
-
-fn explore(
-    sequence: &[char],
-    cuil: u32,
-    cache: &mut HashMap<(&[char], u32), usize>,
-    expansions: &mut HashMap<char, Vec<char>>,
-) -> usize {
-    if cuil == 0 {
-        return sequence.len();
-    }
-
-    if let Some(len) = cache.get(&(sequence, cuil)) {
-        return *len;
-    }
-
-    let mut length = 0;
-    for c in sequence {
-        let inner = expand(*c, expansions);
-        length += explore(&inner, cuil - 1, cache, expansions);
-    }
-    length
-}
-
-fn execute_chunk(
     motion: &[char],
-    cache: &HashMap<(char, char), Vec<char>>,
+    exp_cache: &mut HashMap<&[char], Vec<char>>,
+    motions: &HashMap<(char, char), Vec<char>>,
 ) -> Vec<char> {
+    if let Some(expanded) = exp_cache.get(motion) {
+        return expanded.to_vec();
+    }
+
     let mut moves = Vec::new();
 
     let mut movelist = vec![('A', motion[0])];
@@ -179,46 +144,52 @@ fn execute_chunk(
 
     for pair in movelist {
         let (a, b) = pair;
-        let mut mov = cache.get(&(a, b)).unwrap().clone();
+        let mut mov = motions.get(&(a, b)).unwrap().clone();
         moves.append(&mut mov);
     }
-
     moves
 }
 
-fn execute(
-    movelist: &[char],
-    input_cache: &HashMap<(char, char), Vec<char>>,
-    motion_cache: &mut HashMap<Vec<char>, Vec<char>>,
-) -> Vec<char> {
-    if let Some(value) = motion_cache.get(movelist) {
-        return value.clone();
+fn explore(
+    sequence: &[char],
+    cuil: u64,
+    cache: &mut HashMap<(Vec<char>, u64), u64>,
+    exp_cache: &mut HashMap<&[char], Vec<char>>,
+    motions: &HashMap<(char, char), Vec<char>>,
+) -> u64 {
+    if cuil == 0 {
+        return sequence.len() as u64;
     }
 
-    let mut moves = Vec::new();
-
-    for chonk in movelist.chunk_by(|a, _b| *a != 'A') {
-        let mov = execute_chunk(chonk, input_cache);
-        moves.push(mov);
+    if let Some(len) = cache.get(&(sequence.to_vec(), cuil)) {
+        return *len;
     }
 
-    moves.into_iter().flatten().collect()
+    let mut length = 0;
+    let inner = expand(sequence, exp_cache, motions);
+    for chonk in inner.chunk_by(|a, _b| *a != 'A') {
+        length += explore(chonk, cuil - 1, cache, exp_cache, motions);
+    }
+
+    cache.insert((sequence.to_vec(), cuil), length);
+    length
 }
 
-fn comp_sum(
-    codes: &[Vec<char>],
-    cuil: u32,
-    input_cache: &HashMap<(char, char), Vec<char>>,
-    motion_cache: &mut HashMap<Vec<char>, Vec<char>>,
-) -> u32 {
+fn comp_sum(codes: &[Vec<char>], cuil: u64) -> u64 {
     let mut complexity_sum = 0;
-    for code in codes {
-        println!("code: {code:?}");
 
-        let mut simian_slam = execute(code, input_cache, motion_cache);
-        for _i in 0..cuil {
-            simian_slam = execute(&simian_slam, input_cache, motion_cache);
-        }
+    let mut recursion_cache = HashMap::new();
+    let mut expansion_cache = HashMap::new();
+    let motions = build_motion_cache();
+
+    for code in codes {
+        let simian_slam = explore(
+            code,
+            cuil + 1,
+            &mut recursion_cache,
+            &mut expansion_cache,
+            &motions,
+        );
 
         let code_value: u32 = code
             .iter()
@@ -226,11 +197,8 @@ fn comp_sum(
             .map(|c| c.to_digit(10).unwrap_or(0))
             .fold(0, |acc, x| acc * 10 + x);
 
-        complexity_sum += code_value * simian_slam.len() as u32;
-        println!(
-            "complexity for {code:?}: {code_value} + {}",
-            simian_slam.len()
-        );
+        complexity_sum += code_value as u64 * simian_slam;
+        println!("complexity for {code:?}: {code_value} + {simian_slam}",);
     }
     complexity_sum
 }
@@ -239,15 +207,11 @@ pub fn main(input: &str) {
     let codes: Vec<Vec<char>> =
         input.lines().map(|line| line.chars().collect()).collect();
 
-    let input_cache = build_input_cache();
-    let mut motion_cache = HashMap::new();
-
-    let complexity_sum = comp_sum(&codes, 2, &input_cache, &mut motion_cache);
+    let complexity_sum = comp_sum(&codes, 2);
     println!("sum of code complexities (2 cuil): {complexity_sum}");
 
     // part 2
 
-    let complex_complexity_sum =
-        comp_sum(&codes, 25, &input_cache, &mut motion_cache);
+    let complex_complexity_sum = comp_sum(&codes, 25);
     println!("sum of code complexities (25 cuil): {complex_complexity_sum}");
 }
