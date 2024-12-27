@@ -12,17 +12,9 @@ use crate::vec2;
 use crate::vec2::Vec2;
 use std::collections::{HashMap, VecDeque};
 
-#[derive(Clone)]
 struct ButtonPusher {
     position: char, // the button it is currently standing on
     keypad: HashMap<char, Vec2>, // map of all keys it has access to
-}
-
-#[derive(Clone)]
-struct MemoryCore {
-    recursions: HashMap<(Vec<char>, u64), u64>,
-    expansions: HashMap<Vec<char>, Vec<char>>,
-    motions: HashMap<(char, char), Vec<char>>,
 }
 
 impl ButtonPusher {
@@ -74,6 +66,12 @@ impl ButtonPusher {
 
         moves.into_iter().collect()
     }
+}
+
+struct MemoryCore {
+    recursions: HashMap<(Vec<char>, u64), u64>,
+    expansions: HashMap<Vec<char>, Vec<char>>,
+    motions: HashMap<(char, char), Vec<char>>,
 }
 
 fn numpad_motion(orig: char, dest: char) -> Vec<char> {
@@ -130,10 +128,7 @@ fn build_motion_cache() -> HashMap<(char, char), Vec<char>> {
     cache
 }
 
-fn expand(
-    motion: &[char],
-    cache: &mut MemoryCore,
-) -> Vec<char> {
+fn expand(motion: &[char], cache: &mut MemoryCore) -> Vec<char> {
     if let Some(expanded) = cache.expansions.get(motion) {
         return expanded.to_vec();
     }
@@ -158,11 +153,7 @@ fn expand(
     moves
 }
 
-fn explore(
-    sequence: &[char],
-    cuil: u64,
-    cache: &mut MemoryCore,
-) -> u64 {
+fn explore(sequence: &[char], cuil: u64, cache: &mut MemoryCore) -> u64 {
     if cuil == 0 {
         return sequence.len() as u64;
     }
@@ -191,11 +182,7 @@ fn comp_sum(codes: &[Vec<char>], cuil: u64) -> u64 {
     };
 
     for code in codes {
-        let simian_slam = explore(
-            code,
-            cuil + 1,
-            &mut cache,
-        );
+        let simian_slam = explore(code, cuil + 1, &mut cache);
 
         let code_value: u32 = code
             .iter()
