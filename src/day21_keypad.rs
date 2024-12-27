@@ -18,6 +18,13 @@ struct ButtonPusher {
     keypad: HashMap<char, Vec2>, // map of all keys it has access to
 }
 
+#[derive(Clone)]
+struct MemoryCore {
+    recursions: HashMap<(Vec<char>, u64), u64>,
+    expansions: HashMap<Vec<char>, Vec<char>>,
+    motions: HashMap<(char, char), Vec<char>>,
+}
+
 impl ButtonPusher {
     fn press(&mut self, button: char) -> Vec<char> {
         let here = self.keypad.get(&self.position).unwrap();
@@ -125,10 +132,9 @@ fn build_motion_cache() -> HashMap<(char, char), Vec<char>> {
 
 fn expand(
     motion: &[char],
-    exp_cache: &mut HashMap<&[char], Vec<char>>,
-    motions: &HashMap<(char, char), Vec<char>>,
+    cache: &mut MemoryCore,
 ) -> Vec<char> {
-    if let Some(expanded) = exp_cache.get(motion) {
+    if let Some(expanded) = cache.expansions.get(motion) {
         return expanded.to_vec();
     }
 
@@ -144,51 +150,51 @@ fn expand(
 
     for pair in movelist {
         let (a, b) = pair;
-        let mut mov = motions.get(&(a, b)).unwrap().clone();
+        let mut mov = cache.motions.get(&(a, b)).unwrap().clone();
         moves.append(&mut mov);
     }
+
+    cache.expansions.insert(motion.to_vec(), moves.clone());
     moves
 }
 
 fn explore(
     sequence: &[char],
     cuil: u64,
-    cache: &mut HashMap<(Vec<char>, u64), u64>,
-    exp_cache: &mut HashMap<&[char], Vec<char>>,
-    motions: &HashMap<(char, char), Vec<char>>,
+    cache: &mut MemoryCore,
 ) -> u64 {
     if cuil == 0 {
         return sequence.len() as u64;
     }
 
-    if let Some(len) = cache.get(&(sequence.to_vec(), cuil)) {
+    if let Some(len) = cache.recursions.get(&(sequence.to_vec(), cuil)) {
         return *len;
     }
 
     let mut length = 0;
-    let inner = expand(sequence, exp_cache, motions);
+    let inner = expand(sequence, cache);
     for chonk in inner.chunk_by(|a, _b| *a != 'A') {
-        length += explore(chonk, cuil - 1, cache, exp_cache, motions);
+        length += explore(chonk, cuil - 1, cache);
     }
 
-    cache.insert((sequence.to_vec(), cuil), length);
+    cache.recursions.insert((sequence.to_vec(), cuil), length);
     length
 }
 
 fn comp_sum(codes: &[Vec<char>], cuil: u64) -> u64 {
     let mut complexity_sum = 0;
 
-    let mut recursion_cache = HashMap::new();
-    let mut expansion_cache = HashMap::new();
-    let motions = build_motion_cache();
+    let mut cache = MemoryCore {
+        recursions: HashMap::new(),
+        expansions: HashMap::new(),
+        motions: build_motion_cache(),
+    };
 
     for code in codes {
         let simian_slam = explore(
             code,
             cuil + 1,
-            &mut recursion_cache,
-            &mut expansion_cache,
-            &motions,
+            &mut cache,
         );
 
         let code_value: u32 = code
