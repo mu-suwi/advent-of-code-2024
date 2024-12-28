@@ -191,7 +191,7 @@ fn comp_sum(codes: &[Vec<char>], cuil: u64) -> u64 {
             .fold(0, |acc, x| acc * 10 + x);
 
         complexity_sum += code_value as u64 * simian_slam;
-        println!("complexity for {code:?}: {code_value} + {simian_slam}",);
+        println!("complexity for {code:?}: {code_value} * {simian_slam}",);
     }
     complexity_sum
 }
