@@ -129,10 +129,6 @@ pub fn main(input: &str) {
 
     println!("{part1_output:b}\n{z_should_be:b}");
 
-    let mut functions_sorted = functions.clone();
-    functions_sorted.sort_by_key(|f| f.output);
-    println!("{functions_sorted:#?}");
-
     unimplemented!() // i ended up solving it by hand.
 
     // it turns out having experience with redstone comes in handy when
