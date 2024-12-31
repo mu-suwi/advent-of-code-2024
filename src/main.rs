@@ -24,7 +24,7 @@ mod day21_keypad;
 mod day22_banana;
 mod day23_lanparty;
 mod day24_redstone;
-// mod day25;
+mod day25_keylocks;
 
 #[macro_use]
 mod vec2;
@@ -64,7 +64,7 @@ fn main() {
         22 => day22_banana      ::main(input),
         23 => day23_lanparty    ::main(input),
         24 => day24_redstone    ::main(input),
-        // 25 => day25             ::main(input),
+        25 => day25_keylocks    ::main(input),
         _ => unimplemented!(),
     }
 }
