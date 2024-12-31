@@ -43,7 +43,6 @@ pub fn main(input: &str) {
 
         for j=1,#keys do
           local key = keys[j]
-          if lock == nil or key == nil then break end
 
           if fits(key, lock) then
             matches = matches + 1
