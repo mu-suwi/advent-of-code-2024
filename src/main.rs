@@ -23,7 +23,7 @@ mod day20_noclip;
 mod day21_keypad;
 mod day22_banana;
 mod day23_lanparty;
-// mod day24;
+mod day24_redstone;
 // mod day25;
 
 #[macro_use]
@@ -63,7 +63,7 @@ fn main() {
         21 => day21_keypad      ::main(input),
         22 => day22_banana      ::main(input),
         23 => day23_lanparty    ::main(input),
-        // 24 => day24             ::main(input),
+        24 => day24_redstone    ::main(input),
         // 25 => day25             ::main(input),
         _ => unimplemented!(),
     }
