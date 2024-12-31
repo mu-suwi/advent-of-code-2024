@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 itertools = "0.13.0"
+mlua = {version = "0.10.2", features = ["lua54"]}
 regex = "1.11.1"

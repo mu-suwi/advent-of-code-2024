@@ -4,54 +4,59 @@
 // can fit in each lock by comparing their pin heights.
 // sounds a little too easy..............
 
-type Grid = Vec<Vec<char>>;
-
-fn pin_sizes(grid: Grid) -> [u8; 5] {
-    let mut pins = [0, 0, 0, 0, 0];
-    for i in 0..5 {
-        pins[i] = grid
-            .iter()
-            .skip(1)
-            .take(5)
-            .filter(|line| line[i] == '#')
-            .count() as u8;
-    }
-    pins
-}
-
-fn fits(key: [u8; 5], lock: [u8; 5]) -> bool {
-    for i in 0..5 {
-        if key[i] + lock[i] > 5 {
-            println!("lock {lock:?}\nkey  {key:?} does NOT fit");
-            return false;
-        }
-    }
-    println!("lock {lock:?}\nkey  {key:?} fits!");
-    true
-}
+use mlua::Lua;
 
 pub fn main(input: &str) {
-    // first ever Vec<Vec<Vec<char>>>... merry xmas!
-    let grids: Vec<Grid> = input
-        .split("\n\n")
-        .map(|text| text.lines().map(|line| line.chars().collect()).collect())
-        .collect();
+    let lua = Lua::new();
 
-    let (locks, keys): (Vec<[u8; 5]>, Vec<[u8; 5]>) = {
-        let (locks, keys): (Vec<Grid>, Vec<Grid>) = grids
-            .into_iter()
-            .partition(|grid| grid[0] == ['#', '#', '#', '#', '#']);
-        let [locks, keys] =
-            [locks, keys].map(|c| c.into_iter().map(pin_sizes).collect());
-        (locks, keys)
-    };
+    lua.globals().set("input", input).unwrap();
 
-    let mut fits_total = 0;
-    for lock in locks {
-        fits_total += keys.iter().filter(|key| fits(**key, lock)).count();
-    }
+    lua.load("
+      local locks = {}
+      local keys = {}
 
-    println!("total fitting combinations: {fits_total}");
+      input = string.gsub(input, \"\\n\\n\", \"O\")
+      for grid in string.gmatch(input, \"([^O]+)\") do
+        grid = string.gsub(grid, \"\\n\", \"\")
+        if string.sub(grid, 1, 5) == \"#####\" then
+          table.insert(locks, grid)
+        else
+          table.insert(keys, grid)
+        end
+      end
+
+      local function fits(k, l)
+        if k == nil or l == nil then return false end
+
+        for i=1,#l do
+          if string.sub(k, i, i) == \"#\" and string.sub(l, i, i) == \"#\" then
+            return false
+          end
+        end
+        return true
+      end
+
+      local matches = 0
+
+      for i=1,#locks do
+        local lock = locks[i]
+
+        for j=1,#keys do
+          local key = keys[j]
+          if lock == nil or key == nil then break end
+
+          if fits(key, lock) then
+            matches = matches + 1
+          end
+
+        end
+
+      end
+
+      print(\"matches: \"..matches)
+    ",)
+    .exec()
+    .unwrap();
 
     // part 2
 
